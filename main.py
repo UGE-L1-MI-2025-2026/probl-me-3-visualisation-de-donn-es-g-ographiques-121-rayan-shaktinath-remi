@@ -5,15 +5,14 @@ sf = Reader("departements_20180101")
 
 cree_fenetre(1000,1000)
 
-print(sf.record)
+print(sf.shape)
 
-seine_et_marne = sf.shape(47)
-seine_et_marne = sf.shape(47)
 
-for i in range(100):
+
+for i in range(102):
     departement = sf.shape(i)
     for j in range(len(departement.points)):
-        polygone((departement.points[j][0]*20,departement.points[j][1]*20),couleur="black")
+        polygone(((departement.points[j][0]*68)+350,(departement.points[j][1]*68)-2700),couleur="black")
 
 attend_ev()
 
