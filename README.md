@@ -1,5 +1,7 @@
 # Visualisation de données géolocalisées
 
+(test)
+
 L'objectif de ce problème est de visualiser diverses collections de données
 géolocalisées sur une carte, à l'aide de `fltk`. On s'appuiera pour cela sur des données publiquement
 disponibles, par exemple sur le site du gouvernement dédié à l'«open data», [data.gouv.fr](http://data.gouv.fr).
