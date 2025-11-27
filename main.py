@@ -11,7 +11,7 @@ cree_fenetre(LARGEUR_FENETRE, HAUTEUR_FENETRE)
 shapefile_france = Reader("departements_20180101")
 
 DEPARTEMENTS_METRO = {
-    *[str(i).zfill(2) for i in range(1, 96)],  
+    *[f"{i:02d}" for i in range(1, 96)],  
     "2A", "2B"                                 
 }
 
