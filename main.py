@@ -10,7 +10,7 @@ shapefile_france = Reader("departements_20180101")
 
 DEPARTEMENTS_METRO = {
     *[f"{i:02d}" for i in range(1, 96)],  
-    "2A", "2B"                                 
+    "2A", "2B","69D","69M"                                 
 }
 
 def convert_to_mercator(coords):
@@ -20,12 +20,13 @@ def convert_to_mercator(coords):
     
     x = R * radians(lon)
     y = R * log(tan(pi/4.0 + radians(lat)/2.0))
-    
     return (x, y)
 
 formes_metro = []
 formes = shapefile_france.shapes()
 enregistrements = shapefile_france.records()
+
+print(enregistrements)
 
 for i in range(len(formes)):
     code_dept = enregistrements[i][0]
@@ -72,7 +73,7 @@ for forme in formes_metro:
         debut = parties[i]
         fin = parties[i + 1]
         polygon_points = [projeter(p) for p in points[debut:fin]]
-        polygone(tuple(polygon_points), couleur="black")
+        polygone(tuple(polygon_points), couleur="black",remplissage="blue")
 
 attend_ev()
 ferme_fenetre()
