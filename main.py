@@ -1,6 +1,7 @@
 from shapefile import *
 from Requirement.fltk import *
 from math import *
+from lecture_csv import *
 
 LARGEUR_FENETRE = 1000
 HAUTEUR_FENETRE = 1000
