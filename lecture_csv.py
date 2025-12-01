@@ -1,7 +1,7 @@
 import csv
 
-nom_dep = "Libellé département" 
-nbr_abstentions = "Abstentions"
+nom_dep = "Code département" 
+nbr_abstentions = "% Abstentions"
 code_dep = "Code département"
 
 def obtenir_csv_reader(chemin_fichier):
@@ -39,11 +39,11 @@ def traiter_donnees(reader, indices):
         if len(code_dep_val) > 3 or (code_dep_val.isdigit() and int(code_dep_val) > 96):
             continue
         
-        abstentions = int(abstentions_str) 
+        abstentions = str(abstentions_str) 
             
         if code_dep_val == '2':
-            nombre_abstentions['Corse-du-Sud'] = abstentions
-            nombre_abstentions['Haute-Corse'] = abstentions
+            nombre_abstentions['2A'] = abstentions
+            nombre_abstentions['2B'] = abstentions
         else:
             nombre_abstentions[nom_dep_val] = abstentions
             
@@ -67,5 +67,4 @@ print(f"Nombre de départements : {len(donnees)}")
 print("Liste de chaque département avec son nombre d'abstentions :")
 departements_tries = sorted(donnees.items())
     
-for nom, abstentions in departements_tries:
-    print(f"  {nom:<30}: {abstentions:8,d} abstentions")
+print(departements_tries)
