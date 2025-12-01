@@ -31,15 +31,21 @@ def traiter_donnees(reader, indices):
     for ligne in reader:
         if len(ligne) < max_index + 1:
             continue
-            
+        
         code_dep_val = ligne[index_code_dep].strip()
+        if len(code_dep_val) < 2 :
+            code_dep_val = "0" + code_dep_val
+
+        print(code_dep_val)
+
         nom_dep_val = ligne[index_nom_dep].strip()
         abstentions_str = ligne[index_abstentions].strip().replace(',', '.')
             
         if len(code_dep_val) > 3 or (code_dep_val.isdigit() and int(code_dep_val) > 96):
             continue
         
-        abstentions = str(abstentions_str) 
+        abstentions = float(abstentions_str.strip("%")) / 100
+
             
         if code_dep_val == '2':
             nombre_abstentions['2A'] = abstentions
@@ -59,12 +65,6 @@ def lire_abstentions(chemin_fichier):
     return nombre_abstentions
 
 
-#test
 CHEMIN_FICHIER = "resultats-definitifs-par-departements.csv" 
-print(f"Lecture du fichier {CHEMIN_FICHIER}") 
-donnees = lire_abstentions(CHEMIN_FICHIER) 
-print(f"Nombre de départements : {len(donnees)}")
-print("Liste de chaque département avec son nombre d'abstentions :")
-departements_tries = sorted(donnees.items())
-    
-print(departements_tries)
+donnees = lire_abstentions(CHEMIN_FICHIER)
+#print(donnees)

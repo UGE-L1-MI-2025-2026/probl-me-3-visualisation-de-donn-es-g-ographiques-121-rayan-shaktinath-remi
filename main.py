@@ -9,6 +9,9 @@ cree_fenetre(LARGEUR_FENETRE, HAUTEUR_FENETRE)
 
 shapefile_france = Reader("departements_20180101")
 
+CHEMIN_FICHIER = "resultats-definitifs-par-departements.csv" 
+donnees = lire_abstentions(CHEMIN_FICHIER) 
+    
 DEPARTEMENTS_METRO = {
     *[f"{i:02d}" for i in range(1, 96)],  
     "2A", "2B","69D","69M"                                 
@@ -60,21 +63,43 @@ centre_geo_y = (min_y_merc + max_y_merc) / 2
 CENTRE_ECRAN_X = LARGEUR_FENETRE / 2
 CENTRE_ECRAN_Y = HAUTEUR_FENETRE / 2
 
+def determiner_remplissage(donnees,code_dep):
+    return "blue"
+
+
 def projeter(point):
     coords_merc = convert_to_mercator(point)
     x = (coords_merc[0] - centre_geo_x) * ECHELLE + CENTRE_ECRAN_X
     y = -(coords_merc[1] - centre_geo_y) * ECHELLE + CENTRE_ECRAN_Y  
     return (x, y)
 
-for forme in formes_metro:
+"""for forme in formes_metro:
     points = forme.points
     parties = list(forme.parts) + [len(points)]
+    #code_dep = enregistrements[i][0]
+    print(liste[i])
     
     for i in range(len(forme.parts)):
+        
+        remplissage = determiner_remplissage(donnees,code_dep)
         debut = parties[i]
         fin = parties[i + 1]
         polygon_points = [projeter(p) for p in points[debut:fin]]
-        polygone(tuple(polygon_points), couleur="black",remplissage="blue")
+        polygone(tuple(polygon_points), couleur="black",remplissage="blue")"""
+
+for i in range(len(formes_metro)):
+    points = formes_metro[i].points
+    parties = list(formes_metro[i].parts) + [len(points)]
+    code_dep = enregistrements[i][0]
+    print(code_dep)
+    
+    for i in range(len(formes_metro[i].parts)):
+        
+        remp = determiner_remplissage(donnees,code_dep)
+        debut = parties[i]
+        fin = parties[i + 1]
+        polygon_points = [projeter(p) for p in points[debut:fin]]
+        polygone(tuple(polygon_points), couleur="black",remplissage=remp)
 
 attend_ev()
 ferme_fenetre()
