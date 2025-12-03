@@ -36,7 +36,7 @@ def traiter_donnees(reader, indices):
         if len(code_dep_val) < 2 :
             code_dep_val = "0" + code_dep_val
 
-        print(code_dep_val)
+        #print(code_dep_val)
 
         nom_dep_val = ligne[index_nom_dep].strip()
         abstentions_str = ligne[index_abstentions].strip().replace(',', '.')
