@@ -98,8 +98,7 @@ def determiner_remplissage(donnees, code_dep):
     valeur = convertir(donnees[code_dep],valeur_max,valeur_mini)
     
 
-    return rgb_to_hex(int(0*valeur),int(100*valeur),int(190*valeur))
-
+    return rgb_to_hex(int(125*valeur),int(200*valeur),int(255))
 
 def projeter(point):
     coords_merc = convert_to_mercator(point)
