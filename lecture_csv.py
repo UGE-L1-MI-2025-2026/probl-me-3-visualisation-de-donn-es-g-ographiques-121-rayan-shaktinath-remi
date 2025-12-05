@@ -38,7 +38,6 @@ def traiter_donnees(reader, indices):
 
         #print(code_dep_val)
 
-        nom_dep_val = ligne[index_nom_dep].strip()
         abstentions_str = ligne[index_abstentions].strip().replace(',', '.')
             
         if len(code_dep_val) > 3 or (code_dep_val.isdigit() and int(code_dep_val) > 96):
@@ -50,8 +49,11 @@ def traiter_donnees(reader, indices):
         if code_dep_val == '2':
             nombre_abstentions['2A'] = abstentions
             nombre_abstentions['2B'] = abstentions
+        elif code_dep_val == "69":
+            nombre_abstentions['69D'] = abstentions
+            nombre_abstentions['69M'] = abstentions
         else:
-            nombre_abstentions[nom_dep_val] = abstentions
+            nombre_abstentions[code_dep_val] = abstentions
             
     return nombre_abstentions
 
@@ -67,4 +69,4 @@ def lire_abstentions(chemin_fichier):
 
 CHEMIN_FICHIER = "resultats-definitifs-par-departements.csv" 
 donnees = lire_abstentions(CHEMIN_FICHIER)
-#print(donnees)
+print(donnees)
