@@ -52,6 +52,8 @@ def traiter_donnees(reader, indices):
         elif code_dep_val == "69":
             nombre_abstentions['69D'] = abstentions
             nombre_abstentions['69M'] = abstentions
+        elif code_dep_val == "ZX" or code_dep_val == "ZZ":
+            pass
         else:
             nombre_abstentions[code_dep_val] = abstentions
             

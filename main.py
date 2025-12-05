@@ -77,14 +77,28 @@ else:
     CENTRE_ECRAN_Y = HAUTEUR_FENETRE / 2
 
 
+def key_of_max(d):
+    clee = max(d, key = d.get)
+    return d[clee]
+
+def key_of_min(d):
+    clee = min(d, key = d.get)
+    return d[clee]
+
+def convertir(value, inf, sup):
+    norm = (value - inf) / (sup - inf)
+    return norm
+
 def determiner_remplissage(donnees, code_dep):
-    valeur_mini = min(donnees[code_dep])
-    valeur_max = min(donnees[code_dep])
-    print(valeur_mini,valeur_max)
     if code_dep not in donnees:
         return "grey"
 
-    return rgb_to_hex(int(255*donnees[code_dep]),int(255*donnees[code_dep]),int(255*donnees[code_dep]))
+    valeur_mini = key_of_min(donnees)
+    valeur_max = key_of_max(donnees)
+    valeur = convertir(donnees[code_dep],valeur_max,valeur_mini)
+    
+
+    return rgb_to_hex(int(0*valeur),int(100*valeur),int(190*valeur))
 
 
 def projeter(point):
