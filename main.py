@@ -3,7 +3,7 @@ from Requirement.fltk import cree_fenetre, attend_ev, ferme_fenetre, rectangle
 from utils.constantes import LARGEUR_FENETRE, HAUTEUR_FENETRE
 from utils.lecture_csv import lire_abstentions
 from utils.donnees import separer_formes_geo, calculer_stats_couleurs, calculer_params_metropole, calculer_params_dom
-from utils.affichage import dessiner_metropole, dessiner_dom
+from utils.affichage import dessiner_legende, dessiner_metropole, dessiner_dom
 
 def main():
     
@@ -20,6 +20,7 @@ def main():
     
     dessiner_metropole(formes_metro, donnees_csv, stats_couleurs, params_metro)
     dessiner_dom(formes_dom, donnees_csv, stats_couleurs, params_dom)
+    dessiner_legende(donnees_csv)
 
     attend_ev()
     ferme_fenetre()
