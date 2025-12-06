@@ -33,7 +33,7 @@ def dessiner_metropole(formes_metro, donnees, stats, params):
                 y = -(ym - params['centre_geo_y']) * params['echelle'] + params['centre_ecran_y']
                 poly_pts.append((x, y))
             
-            polygone(tuple(poly_pts), couleur="black", remplissage=couleur)
+            polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
 def dessiner_dom(formes_dom, donnees, stats, params_dom):
     for forme, code in formes_dom:
@@ -52,8 +52,8 @@ def dessiner_dom(formes_dom, donnees, stats, params_dom):
                 x = (xm - p_data['centre_geo_x']) * p_data['echelle'] + p_data['centre_ecran_x']
                 y = -(ym - p_data['centre_geo_y']) * p_data['echelle'] + p_data['centre_ecran_y']
                 poly_pts.append((x, y))
-                
-            polygone(tuple(poly_pts), couleur="black", remplissage=couleur)
+            
+            polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
 
 def dessiner_legende(donnees,
