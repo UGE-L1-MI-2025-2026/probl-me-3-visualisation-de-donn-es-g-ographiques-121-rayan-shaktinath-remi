@@ -58,7 +58,7 @@ def dessiner_dom(formes_dom, donnees, stats, params_dom):
 
 def dessiner_legende(donnees,
     marge=10,
-    largeur_case=50,
+    largeur_case=100,
     hauteur_legende=20,
     espacement=8,
     couleur_case="#444",
@@ -67,7 +67,7 @@ def dessiner_legende(donnees,
     y1 = marge
     y2 = marge + hauteur_legende
 
-    nb_cases = 10
+    nb_cases = 5
 
     for i in range(nb_cases):
         x1 = (LARGEUR_FENETRE//2 - (nb_cases * (largeur_case + espacement))//2) + i * (largeur_case + espacement)
