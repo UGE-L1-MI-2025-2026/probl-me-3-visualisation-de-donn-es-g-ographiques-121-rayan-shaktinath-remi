@@ -60,29 +60,40 @@ def main():
             tags = recuperer_tags(id_obj)
             code_survole = None
             for t in tags:
-                if t in donnees_actuelles:
+                if t in donnees_actuelles or "%" in t:
                     code_survole = t
                     break
 
-            if code_survole:
-                valeur = donnees_actuelles[code_survole] * 100
+            if code_survole is not None:
+                
                 x = abscisse_souris()
                 y = ordonnee_souris()
 
                 if x + 300 > LARGEUR_FENETRE:
                     x = LARGEUR_FENETRE - 305
-
+                if y - 40 < 0:
+                    y = 45
+                
                 rectangle(x + 5, y - 40, x + 300, y,
-                          couleur="black",
-                          remplissage="white",
-                          tag="info")
-
-                texte(x + 15, y - 15,
-                      f"Département {code_survole} | {mode} : {valeur:.2f}%",
-                      couleur="black",
-                      taille=12,
-                      tag="info",
-                      ancrage="sw")
+                        couleur="black",
+                        remplissage="white",
+                        tag="info")
+                if "%" in code_survole:
+                    valeur = code_survole
+                    texte(x + 15, y - 15,
+                        f"Proportion de {mode} : {valeur}",
+                        couleur="black",
+                        taille=12,
+                        tag="info",
+                        ancrage="sw")
+                elif code_survole is not None:
+                    valeur = valeur = donnees_actuelles[code_survole] * 100
+                    texte(x + 15, y - 15,
+                        f"Département {code_survole} | {mode} : {valeur:.2f}%",
+                        couleur="black",
+                        taille=12,
+                        tag="info",
+                        ancrage="sw")
 
         mise_a_jour()
 
