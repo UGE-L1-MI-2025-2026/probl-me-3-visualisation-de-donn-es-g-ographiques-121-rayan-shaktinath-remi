@@ -2,7 +2,8 @@ import csv
 
 code_dep = "Code département" 
 nbr_abstentions = "% Abstentions"
-nbr_blanc = "% Blancs/inscrits"
+nbr_blancs = "% Blancs/inscrits"
+nbr_nuls = "% Nuls/inscrits"
 
 def obtenir_csv_reader(chemin_fichier):
     #Donne le reader et le fichier
@@ -17,18 +18,19 @@ def extraire_indices(reader):
     
     index_code_dep = entetes.index(code_dep)
     index_abstentions = entetes.index(nbr_abstentions)
-    index_blancs = entetes.index(nbr_blanc)
-    
-    return index_code_dep, index_abstentions, index_blancs
+    index_blancs = entetes.index(nbr_blancs)
+    index_nuls = entetes.index(nbr_nuls) 
+    return index_code_dep, index_abstentions, index_blancs, index_nuls
 
 
 def traiter_donnees(reader, indices):
-    #Construit les deux dictionnaires en traitant les données
+    #Construit les trois dictionnaires en traitant les données
     dico_abstentions = {}
     dico_blanc = {}
+    dico_nuls = {} 
     
-    index_code_dep, index_abstentions, index_blancs = indices
-    max_index = max(index_abstentions, index_blancs, index_code_dep) 
+    index_code_dep, index_abstentions, index_blancs, index_nuls = indices
+    max_index = max(index_abstentions, index_blancs, index_nuls, index_code_dep) 
     
     for ligne in reader:
         if len(ligne) < max_index + 1:
@@ -41,6 +43,7 @@ def traiter_donnees(reader, indices):
 
         abstentions_str = ligne[index_abstentions].strip().replace(',', '.')
         blancs_str = ligne[index_blancs].strip().replace(',', '.')
+        nuls_str = ligne[index_nuls].strip().replace(',', '.') 
             
         if len(code_dep_val) > 3 or (code_dep_val.isdigit() and int(code_dep_val) > 96):
             if code_dep_val not in ["971","972","973","974","975","976","986","987","988", "ZX", "ZZ"]:
@@ -48,23 +51,28 @@ def traiter_donnees(reader, indices):
             
         abstention_dec = float(abstentions_str.strip("%")) / 100
         blancs_dec = float(blancs_str.strip("%")) / 100
+        nuls_dec = float(nuls_str.strip("%")) / 100 # NOUVEAU
 
         if code_dep_val == '2':
             dico_abstentions['2A'] = abstention_dec
             dico_blanc['2A'] = blancs_dec
+            dico_nuls['2A'] = nuls_dec
             dico_abstentions['2B'] = abstention_dec
             dico_blanc['2B'] = blancs_dec
+            dico_nuls['2B'] = nuls_dec
         elif code_dep_val == "69":
             dico_abstentions['69D'] = abstention_dec
             dico_blanc['69D'] = blancs_dec
+            dico_nuls['69D'] = nuls_dec
             dico_abstentions['69M'] = abstention_dec
             dico_blanc['69M'] = blancs_dec
+            dico_nuls['69M'] = nuls_dec
         elif code_dep_val not in ["ZX", "ZZ"]:
             dico_abstentions[code_dep_val] = abstention_dec
             dico_blanc[code_dep_val] = blancs_dec
- 
+            dico_nuls[code_dep_val] = nuls_dec
             
-    return {'abstention': dico_abstentions, 'blancs': dico_blanc}
+    return {'abstention': dico_abstentions, 'blancs': dico_blanc, 'nuls': dico_nuls}
 
 
 def lire_abstentions(chemin_fichier):
@@ -75,11 +83,10 @@ def lire_abstentions(chemin_fichier):
     fichier_ouvert.close()
     return donnees
 
-
 CHEMIN_FICHIER = "donner/resultats-definitifs-par-departements.csv" 
 donnees_multiples = lire_abstentions(CHEMIN_FICHIER) 
-blancs_data = donnees_multiples.get('blancs', {})   
-departements_tries = sorted(blancs_data.items())
-print("Pourcentage de Blancs/Inscrits : ")
-for code, blancs in departements_tries:
-    print(f"  {code:<5}: {blancs:.4f} ({blancs:.2%})")
+nuls_data = donnees_multiples.get('nuls', {})
+departements_tries = sorted(nuls_data.items())
+print("Pourcentage de Nuls/Inscrits")
+for code, nuls in departements_tries:
+    print(f"  {code:<5}: {nuls:.4f} ({nuls:.2%})")
