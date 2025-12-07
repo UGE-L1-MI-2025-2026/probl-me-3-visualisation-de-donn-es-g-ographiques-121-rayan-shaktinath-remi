@@ -84,14 +84,9 @@ def lire_abstentions(chemin_fichier):
     return donnees
 
 CHEMIN_FICHIER = "donner/resultats-definitifs-par-departements.csv" 
-<<<<<<< HEAD
-donnees = lire_abstentions(CHEMIN_FICHIER)
-#print(donnees)
-=======
 donnees_multiples = lire_abstentions(CHEMIN_FICHIER) 
 nuls_data = donnees_multiples.get('nuls', {})
 departements_tries = sorted(nuls_data.items())
 print("Pourcentage de Nuls/Inscrits")
 for code, nuls in departements_tries:
     print(f"  {code:<5}: {nuls:.4f} ({nuls:.2%})")
->>>>>>> 98d80de75e5fad394c1dd213053a5bd4753240ce
