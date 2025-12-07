@@ -32,7 +32,7 @@ def main():
         
         if id_obj:
             tags = recuperer_tags(id_obj)
-            
+            print(tags,"#debug")
             code_survole = None
             for e in tags:
                 if e in donnees_csv:

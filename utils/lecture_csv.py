@@ -75,4 +75,4 @@ def lire_abstentions(chemin_fichier):
 
 CHEMIN_FICHIER = "donner/resultats-definitifs-par-departements.csv" 
 donnees = lire_abstentions(CHEMIN_FICHIER)
-print(donnees)
+#print(donnees)

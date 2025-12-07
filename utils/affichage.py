@@ -73,10 +73,12 @@ def dessiner_legende(donnees,
         x1 = (LARGEUR_FENETRE//2 - (nb_cases * (largeur_case + espacement))//2) + i * (largeur_case + espacement)
         x2 = x1 + largeur_case
         couleur_case = determiner_remplissage_legende(donnees, i, nb_cases)
+        pourcentage = determiner_tag_legende(donnees, i, nb_cases)
         rectangle(x1, y1, x2, y2,
                   couleur="black",
                   remplissage=couleur_case,
-                  epaisseur=1)
+                  epaisseur=1,
+                  tag=pourcentage)
 
 
 def determiner_remplissage_legende(donnees, valeur, nb_cases):
@@ -90,3 +92,17 @@ def determiner_remplissage_legende(donnees, valeur, nb_cases):
     valeur_norm = max(0, min(1, valeur_norm))
 
     return rgb_to_hex(int(RED * valeur_norm), int(GREEN * valeur_norm), int(BLUE))
+
+def determiner_tag_legende(donnees, valeur, nb_cases):
+
+    valeur = valeur / (nb_cases)
+
+    mini = key_of_min(donnees)
+    maxi = key_of_max(donnees)
+
+    valeur_norm = convertir(valeur, maxi, mini)
+    valeur_norm = max(0, min(1, valeur_norm))
+
+    pourcentage = (1 - valeur_norm) * 100
+    
+    return "{:.1f}%".format(pourcentage)
