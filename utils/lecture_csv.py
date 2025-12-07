@@ -89,4 +89,4 @@ nuls_data = donnees_multiples.get('nuls', {})
 departements_tries = sorted(nuls_data.items())
 print("Pourcentage de Nuls/Inscrits")
 for code, nuls in departements_tries:
-    print(f"  {code:<5}: {nuls:.4f} ({nuls:.2%})")
+    print(f"  {code:<5}: {nuls:.2%}")
