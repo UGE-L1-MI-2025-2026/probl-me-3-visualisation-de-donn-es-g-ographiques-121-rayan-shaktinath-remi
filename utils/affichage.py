@@ -16,7 +16,14 @@ def determiner_remplissage(donnees, code_dep, stats):
     valeur_norm = convertir(valeur, borne_max, borne_min)
     valeur_norm = max(0, min(1, valeur_norm))
 
-    return rgb_to_hex(int(RED * valeur_norm), int(GREEN * valeur_norm), int(BLUE))
+    (r0, g0, b0) = stats["couleur_min"]
+    (r1, g1, b1) = stats["couleur_max"]
+
+    r = int(r0 + (r1 - r0) * valeur_norm)
+    g = int(g0 + (g1 - g0) * valeur_norm)
+    b = int(b0 + (b1 - b0) * valeur_norm)
+
+    return rgb_to_hex(r, g, b)
 
 def dessiner_metropole(formes_metro, donnees, stats, params):
     for forme, code in formes_metro:
@@ -56,42 +63,46 @@ def dessiner_dom(formes_dom, donnees, stats, params_dom):
             polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
 
-def dessiner_legende(donnees,
-    marge=10,
-    largeur_case=100,
-    hauteur_legende=20,
-    espacement=8,
-    couleur_case="#444",
-):
-
+def dessiner_legende(donnees, stats, marge=10, largeur_case=100, hauteur_legende=20, espacement=8):
     y1 = marge
     y2 = marge + hauteur_legende
-
     nb_cases = 5
 
     for i in range(nb_cases):
         x1 = (LARGEUR_FENETRE//2 - (nb_cases * (largeur_case + espacement))//2) + i * (largeur_case + espacement)
         x2 = x1 + largeur_case
-        couleur_case = determiner_remplissage_legende(donnees, i, nb_cases)
-        pourcentage = determiner_tag_legende(donnees, i, nb_cases)
+
+        couleur_case = determiner_remplissage_legende(donnees, i, nb_cases, stats)
+
+        # pourcentage affiché : calcul approximatif linéaire
+        mini = key_of_min(donnees)
+        maxi = key_of_max(donnees)
+        valeur = mini + (maxi - mini) * (i / (nb_cases - 1))
+        pourcentage = valeur * 100
+        tag = f"{pourcentage:.1f}%"
+
         rectangle(x1, y1, x2, y2,
                   couleur="black",
                   remplissage=couleur_case,
                   epaisseur=1,
-                  tag=pourcentage)
+                  tag=tag)
 
 
-def determiner_remplissage_legende(donnees, valeur, nb_cases):
+def determiner_remplissage_legende(donnees, index_case, nb_cases, stats):
+    
+    if nb_cases > 1:
+        t = index_case / (nb_cases - 1)
+    else:
+        t = 0
 
-    valeur = valeur / (nb_cases)
+    r0, g0, b0 = stats["couleur_min"]
+    r1, g1, b1 = stats["couleur_max"]
 
-    mini = key_of_min(donnees)
-    maxi = key_of_max(donnees)
+    r = int(r0 + (r1 - r0) * t)
+    g = int(g0 + (g1 - g0) * t)
+    b = int(b0 + (b1 - b0) * t)
 
-    valeur_norm = convertir(valeur, maxi, mini)
-    valeur_norm = max(0, min(1, valeur_norm))
-
-    return rgb_to_hex(int(RED * valeur_norm), int(GREEN * valeur_norm), int(BLUE))
+    return rgb_to_hex(r, g, b)
 
 def determiner_tag_legende(donnees, valeur, nb_cases):
 
@@ -106,3 +117,4 @@ def determiner_tag_legende(donnees, valeur, nb_cases):
     pourcentage = (1 - valeur_norm) * 100
     
     return "{:.1f}%".format(pourcentage)
+

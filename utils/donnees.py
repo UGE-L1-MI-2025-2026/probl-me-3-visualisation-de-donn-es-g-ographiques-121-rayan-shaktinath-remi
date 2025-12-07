@@ -20,15 +20,36 @@ def separer_formes_geo():
             
     return metro, dom
 
-def calculer_stats_couleurs(donnees):
+def palette_pour_mode(mode):
+    if mode == "abstention":
+        return ((0, 0, 150), (180, 200, 255))
+    if mode == "blancs":
+        return ((0, 150, 0), (200, 255, 200))     
+    if mode == "nuls":
+        return ((200, 0, 0), (255, 240, 0))       
+    return ((180, 200, 255), (0, 0, 150))
+
+
+
+def calculer_stats_couleurs(donnees, palette):
     d_metro = {k: v for k, v in donnees.items() if k not in DEPARTEMENTS_OUTRE_MER}
-    d_dom = {k: v for k, v in donnees.items() if k in DEPARTEMENTS_OUTRE_MER}
+    d_dom   = {k: v for k, v in donnees.items() if k in DEPARTEMENTS_OUTRE_MER}
 
     stats = {
-        'metro': (key_of_min(d_metro) if d_metro else 0, key_of_max(d_metro) if d_metro else 1),
-        'dom': (key_of_min(d_dom) if d_dom else 0, key_of_max(d_dom) if d_dom else 1)
+        "metro": (
+            key_of_min(d_metro) if d_metro else 0,
+            key_of_max(d_metro) if d_metro else 1
+        ),
+        "dom": (
+            key_of_min(d_dom) if d_dom else 0,
+            key_of_max(d_dom) if d_dom else 1
+        ),
+        "couleur_min": palette[0],
+        "couleur_max": palette[1],
     }
+
     return stats
+
 
 def calculer_params_metropole(formes_metro):
     tous_points = [p for f, c in formes_metro for p in f.points]
