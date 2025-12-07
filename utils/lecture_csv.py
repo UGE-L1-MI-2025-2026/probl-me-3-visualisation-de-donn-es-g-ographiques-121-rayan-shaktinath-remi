@@ -28,7 +28,7 @@ def traiter_donnees(reader, indices):
     index_code_dep, index_nom_dep, index_abstentions = indices
     max_index = max(index_abstentions, index_nom_dep, index_code_dep)
     
-    liste_dom = ["971","972","973","974","975","976","986","987","988"]
+    liste_dom = ["971","972","973","974","976"]
     
     for ligne in reader:
         if len(ligne) < max_index + 1:
