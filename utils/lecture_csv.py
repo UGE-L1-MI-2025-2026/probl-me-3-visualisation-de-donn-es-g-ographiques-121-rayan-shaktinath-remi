@@ -51,7 +51,7 @@ def traiter_donnees(reader, indices):
             
         abstention_dec = float(abstentions_str.strip("%")) / 100
         blancs_dec = float(blancs_str.strip("%")) / 100
-        nuls_dec = float(nuls_str.strip("%")) / 100 # NOUVEAU
+        nuls_dec = float(nuls_str.strip("%")) / 100
 
         if code_dep_val == '2':
             dico_abstentions['2A'] = abstention_dec
