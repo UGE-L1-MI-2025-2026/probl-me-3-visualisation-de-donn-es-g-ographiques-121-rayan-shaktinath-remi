@@ -1,10 +1,10 @@
 from Requirement.fltk import *
-from utils.constantes import LARGEUR_FENETRE, HAUTEUR_FENETRE
-from utils.lecture_csv import lire_abstentions
-from utils.donnees import separer_formes_geo, calculer_stats_couleurs, calculer_params_metropole, calculer_params_dom, palette_pour_mode
-from utils.affichage import dessiner_legende, dessiner_metropole, dessiner_dom
+from utils.constantes import *
+from utils.lecture_csv import *
+from utils.donnees import *
+from utils.affichage import *
 
-def dessiner_carte(formes_metro, formes_dom, donnees, mode):
+def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode):
     
     efface_tout()
 
@@ -12,19 +12,19 @@ def dessiner_carte(formes_metro, formes_dom, donnees, mode):
     stats = calculer_stats_couleurs(donnees, palette)
 
     params_metro = calculer_params_metropole(formes_metro)
+    params_idf = calculer_params_idf(formes_idf)
     params_dom = calculer_params_dom(formes_dom)
 
     dessiner_metropole(formes_metro, donnees, stats, params_metro)
     dessiner_dom(formes_dom, donnees, stats, params_dom)
+    dessiner_ile_de_france(formes_idf, donnees, stats, params_idf)
     dessiner_legende(donnees, stats)
-
-
 
 def main():
     cree_fenetre(LARGEUR_FENETRE, HAUTEUR_FENETRE)
 
     donnees_csv = lire_abstentions("donner/resultats-definitifs-par-departements.csv")
-    formes_metro, formes_dom = separer_formes_geo()
+    formes_metro, formes_dom, formes_idf = separer_formes_geo()
 
     modes = ["abstention", "blancs", "nuls"]
     index_mode = 0
@@ -32,7 +32,7 @@ def main():
     mode = modes[index_mode]
     donnees_actuelles = donnees_csv[mode]
 
-    dessiner_carte(formes_metro, formes_dom, donnees_actuelles, mode)
+    dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
 
     while True:
         ev = donne_ev()
@@ -44,13 +44,13 @@ def main():
             index_mode = (index_mode + 1) % len(modes)
             mode = modes[index_mode]
             donnees_actuelles = donnees_csv[mode]
-            dessiner_carte(formes_metro, formes_dom, donnees_actuelles, mode)
+            dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
 
         if type_ev(ev) == "Touche" and touche(ev) == "Left":
             index_mode = (index_mode - 1) % len(modes)
             mode = modes[index_mode]
             donnees_actuelles = donnees_csv[mode]
-            dessiner_carte(formes_metro, formes_dom, donnees_actuelles, mode)
+            dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
 
         # --- Survol ---
         efface("info")

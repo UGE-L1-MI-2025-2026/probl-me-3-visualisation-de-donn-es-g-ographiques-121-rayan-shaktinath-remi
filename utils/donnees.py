@@ -1,7 +1,7 @@
 # donnees.py
 from shapefile import Reader
 from utils.constantes import *
-from utils.outils import convert_to_mercator, key_of_min, key_of_max
+from utils.outils import *
 
 def separer_formes_geo():
     sf = Reader("donner/departements_20180101")
@@ -10,15 +10,19 @@ def separer_formes_geo():
     
     metro = []
     dom = []
+    idf = []
     
     for forme, record in zip(formes, records):
         code = record[0]
         if code in DEPARTEMENTS_METRO:
             metro.append((forme, code))
+            if code in DEPARTEMENTS_ILE_DE_FRANCE:
+                idf.append((forme, code))
         elif code in DEPARTEMENTS_OUTRE_MER:
             dom.append((forme, code))
+        
             
-    return metro, dom
+    return metro, dom, idf
 
 def palette_pour_mode(mode):
     if mode == "abstention":
@@ -117,5 +121,29 @@ def calculer_params_dom(formes_dom):
             'centre_ecran_y': pos_y_actuelle + h_par_dom / 2
         }
         pos_y_actuelle += h_par_dom
-        
+
     return params_dom
+
+def calculer_params_idf(formes_idf):
+    tous_points = [p for f, c in formes_idf for p in f.points]
+    
+    min_lon = min(p[0] for p in tous_points)
+    max_lon = max(p[0] for p in tous_points)
+    min_lat = min(p[1] for p in tous_points)
+    max_lat = max(p[1] for p in tous_points)
+
+    min_m = convert_to_mercator((min_lon, min_lat))
+    max_m = convert_to_mercator((max_lon, max_lat))
+
+    largeur = max_m[0] - min_m[0]
+    hauteur = max_m[1] - min_m[1]
+
+    echelle = 0.002
+    
+    return {
+        'echelle': echelle,
+        'centre_geo_x': (min_m[0] + max_m[0]) / 2,
+        'centre_geo_y': (min_m[1] + max_m[1]) / 2,
+        'centre_ecran_x': LARGEUR_FENETRE-100,
+        'centre_ecran_y': 150 
+    }

@@ -1,6 +1,6 @@
 from Requirement.fltk import *
-from utils.constantes import DEPARTEMENTS_OUTRE_MER , LARGEUR_FENETRE, HAUTEUR_FENETRE, RED, GREEN, BLUE
-from utils.outils import convertir, rgb_to_hex, convert_to_mercator, key_of_min, key_of_max
+from utils.constantes import *
+from utils.outils import *
 
 def determiner_remplissage(donnees, code_dep, stats):
     if code_dep not in donnees:
@@ -62,6 +62,22 @@ def dessiner_dom(formes_dom, donnees, stats, params_dom):
             
             polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
+def dessiner_ile_de_france(forme_idf, donnees, stats, params_idf):
+    for forme, code in forme_idf:
+        points = forme.points
+        parties = list(forme.parts) + [len(points)]
+        couleur = determiner_remplissage(donnees, code, stats)
+        
+        for i in range(len(forme.parts)):
+            poly_pts = []
+            for p in points[parties[i]:parties[i+1]]:
+                xm, ym = convert_to_mercator((p[0], p[1]))
+                
+                x = (xm - params_idf['centre_geo_x']) * params_idf['echelle'] + params_idf['centre_ecran_x']
+                y = -(ym - params_idf['centre_geo_y']) * params_idf['echelle'] + params_idf['centre_ecran_y']
+                poly_pts.append((x, y))
+            
+            polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
 def dessiner_legende(donnees, stats, marge=10, largeur_case=100, hauteur_legende=20, espacement=8):
     y1 = marge
