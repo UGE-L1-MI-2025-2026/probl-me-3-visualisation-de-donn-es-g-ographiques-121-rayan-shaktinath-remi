@@ -5,16 +5,18 @@ code_dep = "Code département"
 nbr_abstentions = "% Abstentions"
 nbr_blancs = "% Blancs/inscrits"
 nbr_nuls = "% Nuls/inscrits"
+code_dep_commune = "DeptNum"
+nom_commune = "Commune"
+lat_dd = "LatDD"
+lon_dd = "LonDD"
 
 def obtenir_csv_reader(chemin_fichier):
-    #Donne le reader et le fichier
     f = open(chemin_fichier, 'r', encoding='utf-8', newline='')
     reader = csv.reader(f, delimiter=';')
     return reader, f
 
 
 def extraire_indices(reader):
-    #Donne les indices des colonnes
     entetes = next(reader)
     
     index_code_dep = entetes.index(code_dep)
@@ -25,7 +27,6 @@ def extraire_indices(reader):
 
 
 def traiter_donnees(reader, indices):
-    #Construit les trois dictionnaires en traitant les données
     dico_abstentions = {}
     dico_blanc = {}
     dico_nuls = {} 
@@ -77,13 +78,50 @@ def traiter_donnees(reader, indices):
 
 
 def lire_abstentions(chemin_fichier):
-    #Fonction principale
     reader, fichier_ouvert = obtenir_csv_reader(chemin_fichier)
     indices = extraire_indices(reader)
     donnees = traiter_donnees(reader, indices)
     fichier_ouvert.close()
     return donnees
 
-donnees_multiples = lire_abstentions(CHEMIN_CSV) 
-nuls_data = donnees_multiples.get('nuls', {})
-departements_tries = sorted(nuls_data.items())
+def lire_commune(chemin_fichier_commune):
+    dico_commune = {}
+    reader, fichier_ouvert = obtenir_csv_reader(chemin_fichier_commune)
+
+    entetes = next(reader)
+        
+    index_code = entetes.index(code_dep_commune)
+    index_commune = entetes.index(nom_commune)
+    index_lat = entetes.index(lat_dd)
+    index_lon = entetes.index(lon_dd)        
+    
+    for ligne in reader:
+        if len(ligne) < max(index_lon, index_lat) + 1:
+            continue    
+        code_dep = ligne[index_code].strip().strip('"')
+        commune = ligne[index_commune].strip().strip('"')
+
+        lat = float(ligne[index_lat])
+        lon = float(ligne[index_lon])
+        
+        if code_dep.isdigit() and len(code_dep) == 1:
+            code_dep = "0" + code_dep
+        
+        if len(code_dep) <= 3 and code_dep not in ["987", "988", "977", "978"]: 
+            dico_commune[code_dep] = {
+                'commune': commune,
+                'lat': lat,
+                'lon': lon
+            }
+
+    fichier_ouvert.close()
+    return dico_commune
+    
+
+CHEMIN_FICHIER_RESULTATS = "donner/resultats-definitifs-par-departements.csv"
+CHEMIN_FICHIER_CHEFS_LIEUX = "donner/hotels-de-prefectures-fr.csv"
+chefs_lieux_data = lire_commune(CHEMIN_FICHIER_CHEFS_LIEUX)       
+chefs_tries = sorted(chefs_lieux_data.items())
+for code, data in chefs_tries:
+    print(f"  {code:<5}: Commune: {data['commune']:<20} Lat: {data['lat']:.4f}, Lon: {data['lon']:.4f}")
+    
