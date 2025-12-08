@@ -25,7 +25,7 @@ def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode):
 def main():
     cree_fenetre(LARGEUR_FENETRE, HAUTEUR_FENETRE)
 
-    donnees_csv = lire_abstentions("donner/resultats-definitifs-par-departements.csv")
+    donnees_csv = lire_abstentions(CHEMIN_CSV)
     formes_metro, formes_dom, formes_idf = separer_formes_geo()
 
     modes = ["abstention", "blancs", "nuls"]
@@ -69,7 +69,7 @@ def main():
                         break
 
                 if code_survole is not None:
-                    dessiner_contexte(donnees_actuelles, mode, code_survole)
+                    dessiner_contexte(modes, code_survole, donnees_csv)
                 else:
                     efface("contexte")
 

@@ -1,3 +1,5 @@
+CHEMIN_CSV = "donner/resultats-definitifs-par-departements.csv"
+
 LARGEUR_FENETRE = 1000
 HAUTEUR_FENETRE = 1000
 

@@ -1,4 +1,5 @@
 import csv
+from utils.constantes import CHEMIN_CSV
 
 code_dep = "Code département" 
 nbr_abstentions = "% Abstentions"
@@ -83,7 +84,6 @@ def lire_abstentions(chemin_fichier):
     fichier_ouvert.close()
     return donnees
 
-CHEMIN_FICHIER = "donner/resultats-definitifs-par-departements.csv" 
-donnees_multiples = lire_abstentions(CHEMIN_FICHIER) 
+donnees_multiples = lire_abstentions(CHEMIN_CSV) 
 nuls_data = donnees_multiples.get('nuls', {})
 departements_tries = sorted(nuls_data.items())

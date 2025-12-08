@@ -167,7 +167,7 @@ def dessiner_survol(donnees, code_survole, mode):
             tag="info",
             ancrage="sw")
 
-def dessiner_contexte(donnees, mode, code_departement):
+def dessiner_contexte(liste_mode, code_departement, donnees_csv):
     efface("contexte")
     x1 = 10
     x2 = 215
@@ -176,13 +176,21 @@ def dessiner_contexte(donnees, mode, code_departement):
 
     noms_departements = associer_numero_nom_departements()
 
-    valeur = donnees[code_departement] * 100
     texte((x1 + x2)//2, y1 + 20,
-        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement}) \n{mode} : {valeur:.2f}%",
+        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement})",
         couleur="black",
         taille=12,
         tag="contexte",
         ancrage="n")
+
+    for i, m in enumerate(liste_mode):
+        valeur_m = donnees_csv[m].get(code_departement, 0) * 100
+        texte((x1 + x2)//2, y1 + 60 + i * 30,
+            f"{m} : {valeur_m:.2f}%",
+            couleur="black",
+            taille=12,
+            tag="contexte",
+            ancrage="n")
 
     rectangle(x1, y1, x2, y2,
               couleur="black",
