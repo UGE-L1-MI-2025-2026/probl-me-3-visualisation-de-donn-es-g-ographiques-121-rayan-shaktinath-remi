@@ -1,6 +1,8 @@
+from turtle import mode
 from Requirement.fltk import *
 from utils.constantes import *
 from utils.outils import *
+from utils.donnees import associer_numero_nom_departements
 
 def determiner_remplissage(donnees, code_dep, stats):
     if code_dep not in donnees:
@@ -133,6 +135,61 @@ def determiner_tag_legende(donnees, valeur, nb_cases):
     pourcentage = (1 - valeur_norm) * 100
     
     return "{:.1f}%".format(pourcentage)
+
+
+def dessiner_survol(donnees, code_survole, mode):
+    x = abscisse_souris()
+    y = ordonnee_souris()
+
+    if x + 300 > LARGEUR_FENETRE:
+        x = LARGEUR_FENETRE - 305
+    if y - 40 < 0:
+            y = 45
+                
+    rectangle(x + 5, y - 40, x + 300, y,
+        couleur="black",
+        remplissage="white",
+        tag="info")
+    if "%" in code_survole:
+        valeur = code_survole
+        texte(x + 15, y - 15,
+            f"Proportion de {mode} : {valeur}",
+            couleur="black",
+            taille=12,
+            tag="info",
+            ancrage="sw")
+    elif code_survole is not None:
+        valeur = valeur = donnees[code_survole] * 100
+        texte(x + 15, y - 15,
+            f"Département {code_survole} | {mode} : {valeur:.2f}%",
+            couleur="black",
+            taille=12,
+            tag="info",
+            ancrage="sw")
+
+def dessiner_contexte(donnees, mode, code_departement):
+    efface("contexte")
+    x1 = 10
+    x2 = 215
+    y1 = 10
+    y2 = 255
+
+    noms_departements = associer_numero_nom_departements()
+
+    valeur = donnees[code_departement] * 100
+    texte((x1 + x2)//2, y1 + 20,
+        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement}) \n{mode} : {valeur:.2f}%",
+        couleur="black",
+        taille=12,
+        tag="contexte",
+        ancrage="n")
+
+    rectangle(x1, y1, x2, y2,
+              couleur="black",
+              remplissage="",
+              epaisseur=2,
+              tag="contexte")
+
 
 
 def dessiner_titre(modes):

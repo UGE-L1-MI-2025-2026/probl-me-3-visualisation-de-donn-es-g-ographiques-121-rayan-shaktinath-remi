@@ -1,4 +1,3 @@
-# donnees.py
 from shapefile import Reader
 from utils.constantes import *
 from utils.outils import *
@@ -20,9 +19,20 @@ def separer_formes_geo():
                 idf.append((forme, code))
         elif code in DEPARTEMENTS_OUTRE_MER:
             dom.append((forme, code))
-        
-            
+
     return metro, dom, idf
+
+def associer_numero_nom_departements():
+    sf = Reader("donner/departements_20180101")
+    records = sf.records()
+    
+    assoc = {}
+    for record in records:
+        code = record[0]
+        nom = record[1]
+        assoc[code] = nom
+    
+    return assoc
 
 def palette_pour_mode(mode):
     if mode == "abstention":
@@ -134,9 +144,6 @@ def calculer_params_idf(formes_idf):
 
     min_m = convert_to_mercator((min_lon, min_lat))
     max_m = convert_to_mercator((max_lon, max_lat))
-
-    largeur = max_m[0] - min_m[0]
-    hauteur = max_m[1] - min_m[1]
 
     echelle = 0.002
     

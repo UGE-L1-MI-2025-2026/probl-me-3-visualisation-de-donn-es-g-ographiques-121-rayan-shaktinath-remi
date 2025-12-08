@@ -1,4 +1,5 @@
 from Requirement.fltk import *
+from utils import donnees
 from utils.constantes import *
 from utils.lecture_csv import *
 from utils.donnees import *
@@ -53,10 +54,32 @@ def main():
             donnees_actuelles = donnees_csv[mode]
             dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
 
+
+        if type_ev(ev) == "ClicGauche":
+
+            id_clic = objet_survole()
+            if id_clic is None:
+                efface("contexte")
+            else:
+                tags = recuperer_tags(id_clic)
+                code_survole = None
+                for t in tags:
+                    if t in donnees_actuelles:
+                        code_survole = t
+                        break
+
+                if code_survole is not None:
+                    dessiner_contexte(donnees_actuelles, mode, code_survole)
+                else:
+                    efface("contexte")
+
+        if type_ev(ev) == "ClicDroit":
+            efface("contexte")
+
         # --- Survol ---
         efface("info")
         id_obj = objet_survole()
-
+             
         if id_obj:
             tags = recuperer_tags(id_obj)
             code_survole = None
@@ -66,41 +89,11 @@ def main():
                     break
 
             if code_survole is not None:
-                
-                x = abscisse_souris()
-                y = ordonnee_souris()
-
-                if x + 300 > LARGEUR_FENETRE:
-                    x = LARGEUR_FENETRE - 305
-                if y - 40 < 0:
-                    y = 45
-                
-                rectangle(x + 5, y - 40, x + 300, y,
-                        couleur="black",
-                        remplissage="white",
-                        tag="info")
-                if "%" in code_survole:
-                    valeur = code_survole
-                    texte(x + 15, y - 15,
-                        f"Proportion de {mode} : {valeur}",
-                        couleur="black",
-                        taille=12,
-                        tag="info",
-                        ancrage="sw")
-                elif code_survole is not None:
-                    valeur = valeur = donnees_actuelles[code_survole] * 100
-                    texte(x + 15, y - 15,
-                        f"Département {code_survole} | {mode} : {valeur:.2f}%",
-                        couleur="black",
-                        taille=12,
-                        tag="info",
-                        ancrage="sw")
+                dessiner_survol(donnees_actuelles, code_survole, mode)
 
         mise_a_jour()
 
     ferme_fenetre()
-
-
 
 if __name__ == "__main__":
     main()
