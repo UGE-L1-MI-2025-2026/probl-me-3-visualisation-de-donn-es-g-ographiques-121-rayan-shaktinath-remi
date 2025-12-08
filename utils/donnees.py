@@ -30,7 +30,7 @@ def palette_pour_mode(mode):
     if mode == "blancs":
         return ((0, 150, 0), (200, 255, 200))     
     if mode == "nuls":
-        return ((200, 0, 0), (255, 240, 0))       
+        return ((242, 39, 245), (251, 187, 252))      
     return ((180, 200, 255), (0, 0, 150))
 
 
