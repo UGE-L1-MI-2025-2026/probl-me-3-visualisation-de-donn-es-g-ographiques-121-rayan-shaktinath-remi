@@ -95,8 +95,8 @@ def determiner_remplissage_legende(donnees, index_case, nb_cases, stats):
     else:
         t = 0
 
-    r0, g0, b0 = stats["couleur_min"]
-    r1, g1, b1 = stats["couleur_max"]
+    r0, g0, b0 = stats["couleur_max"] 
+    r1, g1, b1 = stats["couleur_min"]
 
     r = int(r0 + (r1 - r0) * t)
     g = int(g0 + (g1 - g0) * t)
