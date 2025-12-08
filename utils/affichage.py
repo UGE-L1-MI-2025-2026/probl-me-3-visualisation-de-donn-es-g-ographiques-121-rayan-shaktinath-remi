@@ -134,3 +134,12 @@ def determiner_tag_legende(donnees, valeur, nb_cases):
     
     return "{:.1f}%".format(pourcentage)
 
+
+def dessiner_titre(modes):
+
+    if modes == "abstention":
+        texte(500, 950,"CARTE DE FRANCE DU POURCENTAGE D'ABSTENTION" , police="Inter ExtraBold",couleur="black", taille=15, tag="titre", ancrage="s")
+    elif modes == "blancs":
+        texte(500, 950,"CARTE DE FRANCE DU POURCENTAGE DE VOTE BLANC" , police="Inter ExtraBold",couleur="black", taille=15, tag="titre", ancrage="s")
+    elif modes == "nuls":
+        texte(500, 950,"CARTE DE FRANCE DU POURCENTAGE DE VOTE NUL" , police="Inter ExtraBold",couleur="black", taille=15, tag="titre", ancrage="s")
