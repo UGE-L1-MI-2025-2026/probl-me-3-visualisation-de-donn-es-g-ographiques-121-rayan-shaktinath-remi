@@ -19,6 +19,7 @@ def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode):
     dessiner_dom(formes_dom, donnees, stats, params_dom)
     dessiner_ile_de_france(formes_idf, donnees, stats, params_idf)
     dessiner_legende(donnees, stats)
+    dessiner_titre(mode)
 
 def main():
     cree_fenetre(LARGEUR_FENETRE, HAUTEUR_FENETRE)
