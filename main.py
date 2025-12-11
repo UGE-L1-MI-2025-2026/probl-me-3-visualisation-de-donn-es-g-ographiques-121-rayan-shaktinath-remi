@@ -5,7 +5,7 @@ from utils.lecture_csv import *
 from utils.donnees import *
 from utils.affichage import *
 
-def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode):
+def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode, chefs_lieux):
     
     efface_tout()
 
@@ -16,9 +16,13 @@ def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode):
     params_idf = calculer_params_idf(formes_idf)
     params_dom = calculer_params_dom(formes_dom)
 
+    image(650, 970, "image\\right.png", largeur=150, hauteur=150, tag="image_droite")
+    image(350, 970, "image\\left.png", largeur=150, hauteur=150, tag="image_gauche")
+    
     dessiner_metropole(formes_metro, donnees, stats, params_metro)
     dessiner_dom(formes_dom, donnees, stats, params_dom)
     dessiner_ile_de_france(formes_idf, donnees, stats, params_idf)
+    dessiner_centroides(chefs_lieux, params_metro, params_dom, params_idf)
     dessiner_legende(donnees, stats)
     dessiner_titre(mode)
 
@@ -34,7 +38,7 @@ def main():
     mode = modes[index_mode]
     donnees_actuelles = donnees_csv[mode]
 
-    dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
+    dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode, CHEFS_LIEUX)
 
     while True:
         ev = donne_ev()
@@ -42,17 +46,21 @@ def main():
         if type_ev(ev) == "Quitte":
             break
 
-        if type_ev(ev) == "Touche" and touche(ev) == "Right":
-            index_mode = (index_mode + 1) % len(modes)
-            mode = modes[index_mode]
-            donnees_actuelles = donnees_csv[mode]
-            dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
-
-        if type_ev(ev) == "Touche" and touche(ev) == "Left":
-            index_mode = (index_mode - 1) % len(modes)
-            mode = modes[index_mode]
-            donnees_actuelles = donnees_csv[mode]
-            dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode)
+        if type_ev(ev) == "ClicGauche":
+            id_obj = objet_survole()
+            if id_obj is not None:
+                tags = recuperer_tags(id_obj)
+                if tags:
+                    if "image_droite" in tags:
+                        index_mode = (index_mode + 1) % len(modes)
+                        mode = modes[index_mode]
+                        donnees_actuelles = donnees_csv[mode]
+                        dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode, CHEFS_LIEUX)
+                    elif "image_gauche" in tags:
+                        index_mode = (index_mode - 1) % len(modes)
+                        mode = modes[index_mode]
+                        donnees_actuelles = donnees_csv[mode]
+                        dessiner_carte(formes_metro, formes_dom, formes_idf, donnees_actuelles, mode, CHEFS_LIEUX)
 
 
         if type_ev(ev) == "ClicGauche":
