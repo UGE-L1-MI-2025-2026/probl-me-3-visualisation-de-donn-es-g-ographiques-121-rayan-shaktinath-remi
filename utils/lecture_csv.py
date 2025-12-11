@@ -120,8 +120,8 @@ def lire_commune(chemin_fichier_commune):
 
 CHEMIN_FICHIER_RESULTATS = "donner/resultats-definitifs-par-departements.csv"
 CHEMIN_FICHIER_CHEFS_LIEUX = "donner/hotels-de-prefectures-fr.csv"
-chefs_lieux_data = lire_commune(CHEMIN_FICHIER_CHEFS_LIEUX)       
-chefs_tries = sorted(chefs_lieux_data.items())
-for code, data in chefs_tries:
-    print(f"  {code:<5}: Commune: {data['commune']:<20} Lat: {data['lat']:.4f}, Lon: {data['lon']:.4f}")
+CHEFS_LIEUX  = lire_commune(CHEMIN_FICHIER_CHEFS_LIEUX)       
+# chefs_tries = sorted(chefs_lieux_data.items())
+# for code, data in chefs_tries:
+    # print(f"  {code:<5}: Commune: {data['commune']:<20} Lat: {data['lat']:.4f}, Lon: {data['lon']:.4f}")
     

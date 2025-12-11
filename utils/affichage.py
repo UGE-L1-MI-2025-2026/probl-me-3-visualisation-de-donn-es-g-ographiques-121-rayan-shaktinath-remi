@@ -2,6 +2,7 @@ from turtle import mode
 from Requirement.fltk import *
 from utils.constantes import *
 from utils.outils import *
+from utils.lecture_csv import *
 from utils.donnees import associer_numero_nom_departements
 
 def determiner_remplissage(donnees, code_dep, stats):
@@ -81,6 +82,29 @@ def dessiner_ile_de_france(forme_idf, donnees, stats, params_idf):
             
             polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
+def dessiner_centroides(chefs_lieux, params_metro, params_dom, params_idf, rayon_px=6, couleur_hex="#000000"):
+
+    for code_dep, data in chefs_lieux.items():
+        try:
+            lat = float(data['lat'])
+            lon = float(data['lon'])
+        except Exception:
+            continue 
+
+        xm, ym = convert_to_mercator((lon, lat))
+
+        if code_dep in params_dom:
+            params = params_dom[code_dep]
+        elif code_dep in DEPARTEMENTS_ILE_DE_FRANCE:
+            params = params_idf
+        else:
+            params = params_metro
+
+        x = (xm - params['centre_geo_x']) * params['echelle'] + params['centre_ecran_x']
+        y = -(ym - params['centre_geo_y']) * params['echelle'] + params['centre_ecran_y']
+
+        cercle(x, y, rayon_px, couleur="black", remplissage=couleur_hex, tag=str(code_dep))
+
 def dessiner_legende(donnees, stats, marge=10, largeur_case=100, hauteur_legende=20, espacement=8):
     y1 = marge
     y2 = marge + hauteur_legende
@@ -150,6 +174,9 @@ def dessiner_survol(donnees, code_survole, mode):
         couleur="black",
         remplissage="white",
         tag="info")
+    
+    nom_commune = CHEFS_LIEUX.get(code_survole, {}).get('commune', 'Inconnu')
+    
     if "%" in code_survole:
         valeur = code_survole
         texte(x + 15, y - 15,
@@ -159,9 +186,9 @@ def dessiner_survol(donnees, code_survole, mode):
             tag="info",
             ancrage="sw")
     elif code_survole is not None:
-        valeur = valeur = donnees[code_survole] * 100
+        valeur = donnees[code_survole] * 100
         texte(x + 15, y - 15,
-            f"Département {code_survole} | {mode} : {valeur:.2f}%",
+            f"Commune : {nom_commune} | {mode} : {valeur:.2f}%",
             couleur="black",
             taille=12,
             tag="info",
@@ -175,9 +202,10 @@ def dessiner_contexte(liste_mode, code_departement, donnees_csv):
     y2 = 255
 
     noms_departements = associer_numero_nom_departements()
+    nom_commune = CHEFS_LIEUX.get(code_departement, {}).get('commune', 'Inconnu')
 
     texte((x1 + x2)//2, y1 + 20,
-        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement})",
+        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement}) \n\nCommune : {nom_commune}",
         couleur="black",
         taille=12,
         tag="contexte",
@@ -185,7 +213,7 @@ def dessiner_contexte(liste_mode, code_departement, donnees_csv):
 
     for i, m in enumerate(liste_mode):
         valeur_m = donnees_csv[m].get(code_departement, 0) * 100
-        texte((x1 + x2)//2, y1 + 60 + i * 30,
+        texte((x1 + x2)//2, y1 + 80 + i * 30,
             f"{m} : {valeur_m:.2f}%",
             couleur="black",
             taille=12,
