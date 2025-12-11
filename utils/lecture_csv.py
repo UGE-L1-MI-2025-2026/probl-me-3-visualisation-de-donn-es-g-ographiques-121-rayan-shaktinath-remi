@@ -5,6 +5,8 @@ code_dep = "Code département"
 nbr_abstentions = "% Abstentions"
 nbr_blancs = "% Blancs/inscrits"
 nbr_nuls = "% Nuls/inscrits"
+nbr_votants = "Votants"
+nbr_inscrits = "Inscrits"
 code_dep_commune = "DeptNum"
 nom_commune = "Commune"
 lat_dd = "LatDD"
@@ -24,6 +26,14 @@ def extraire_indices(reader):
     index_blancs = entetes.index(nbr_blancs)
     index_nuls = entetes.index(nbr_nuls) 
     return index_code_dep, index_abstentions, index_blancs, index_nuls
+
+def extraire_indices_inscrits_votants(reader):
+    entetes = next(reader)
+    
+    index_code_dep = entetes.index(code_dep)
+    index_inscrits = entetes.index(nbr_inscrits)
+    index_votants = entetes.index(nbr_votants)
+    return index_code_dep, index_inscrits, index_votants
 
 
 def traiter_donnees(reader, indices):
@@ -76,11 +86,56 @@ def traiter_donnees(reader, indices):
             
     return {'abstention': dico_abstentions, 'blancs': dico_blanc, 'nuls': dico_nuls}
 
+def traiter_donnees_inscrits_votants(reader, indices):
+    index_code_dep, index_inscrits, index_votants = indices
+    max_index = max(index_code_dep, index_inscrits, index_votants)
+    
+    dico_inscrits = {}
+    dico_votants = {}
+    
+    for ligne in reader:
+        if len(ligne) < max_index + 1:
+            continue
+            
+        code_dep_val = ligne[index_code_dep].strip()
+        
+        if len(code_dep_val) == 1 and code_dep_val.isdigit():
+            code_dep_val = "0" + code_dep_val
+            
+        inscrits_str = ligne[index_inscrits].strip().replace(',', '.')
+        votants_str = ligne[index_votants].strip().replace(',', '.')       
+        
+        if len(code_dep_val) > 3 or (code_dep_val.isdigit() and int(code_dep_val) > 96):
+            if code_dep_val not in ["971","972","973","974","975","976","986","987","988", "ZX", "ZZ"]:
+                 continue
+            
+        inscrits = int(inscrits_str)
+        votants = int(votants_str)
+
+        if code_dep_val == '69':
+            dico_inscrits['69D'] = inscrits
+            dico_votants['69D'] = votants
+            dico_inscrits['69M'] = inscrits
+            dico_votants['69M'] = votants
+
+        dico_inscrits[code_dep_val] = inscrits
+        dico_votants[code_dep_val] = votants
+            
+    return {'inscrits': dico_inscrits, 'votants': dico_votants}
+
+
 
 def lire_abstentions(chemin_fichier):
     reader, fichier_ouvert = obtenir_csv_reader(chemin_fichier)
     indices = extraire_indices(reader)
     donnees = traiter_donnees(reader, indices)
+    fichier_ouvert.close()
+    return donnees
+
+def lire_inscrits_votants(chemin_fichier):
+    reader, fichier_ouvert = obtenir_csv_reader(chemin_fichier)
+    indices = extraire_indices_inscrits_votants(reader)
+    donnees = traiter_donnees_inscrits_votants(reader, indices)
     fichier_ouvert.close()
     return donnees
 
@@ -109,6 +164,17 @@ def lire_commune(chemin_fichier_commune):
         
         if len(code_dep) <= 3 and code_dep not in ["987", "988", "977", "978"]: 
             dico_commune[code_dep] = {
+                'commune': commune,
+                'lat': lat,
+                'lon': lon
+            }
+        if code_dep == "69":
+            dico_commune['69D'] = {
+                'commune': commune,
+                'lat': lat,
+                'lon': lon
+            }
+            dico_commune['69M'] = {
                 'commune': commune,
                 'lat': lat,
                 'lon': lon

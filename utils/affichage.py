@@ -165,17 +165,21 @@ def dessiner_survol(donnees, code_survole, mode):
     x = abscisse_souris()
     y = ordonnee_souris()
 
-    if x + 300 > LARGEUR_FENETRE:
-        x = LARGEUR_FENETRE - 305
+    nom_departement = associer_numero_nom_departements().get(code_survole, 'Inconnu')
+
+    TAILLE_RECTANGLE = 220 + (len(nom_departement) * 7)
+
+    if x + TAILLE_RECTANGLE > LARGEUR_FENETRE:
+        x = LARGEUR_FENETRE - TAILLE_RECTANGLE - 5
     if y - 40 < 0:
             y = 45
                 
-    rectangle(x + 5, y - 40, x + 300, y,
+    rectangle(x + 5, y - 40, x + TAILLE_RECTANGLE, y,
         couleur="black",
         remplissage="white",
         tag="info")
     
-    nom_commune = CHEFS_LIEUX.get(code_survole, {}).get('commune', 'Inconnu')
+    
     
     if "%" in code_survole:
         valeur = code_survole
@@ -188,7 +192,7 @@ def dessiner_survol(donnees, code_survole, mode):
     elif code_survole is not None:
         valeur = donnees[code_survole] * 100
         texte(x + 15, y - 15,
-            f"Commune : {nom_commune} | {mode} : {valeur:.2f}%",
+            f" {nom_departement} ({code_survole}) | {mode} : {valeur:.2f}%",
             couleur="black",
             taille=12,
             tag="info",
@@ -201,11 +205,19 @@ def dessiner_contexte(liste_mode, code_departement, donnees_csv):
     y1 = 10
     y2 = 255
 
+    dico_inscrits_votants = lire_inscrits_votants(CHEMIN_CSV)
     noms_departements = associer_numero_nom_departements()
     nom_commune = CHEFS_LIEUX.get(code_departement, {}).get('commune', 'Inconnu')
-
+        
     texte((x1 + x2)//2, y1 + 20,
-        f"Info : {noms_departements.get(code_departement, code_departement)} ({code_departement}) \n\nCommune : {nom_commune}",
+        f"{noms_departements.get(code_departement, code_departement)} ({code_departement})",
+        couleur="black",
+        taille=12,
+        tag="contexte",
+        ancrage="n")
+
+    texte((x1 + x2)//2, y1 + 50,
+        f"{nom_commune}",
         couleur="black",
         taille=12,
         tag="contexte",
@@ -213,7 +225,7 @@ def dessiner_contexte(liste_mode, code_departement, donnees_csv):
 
     for i, m in enumerate(liste_mode):
         valeur_m = donnees_csv[m].get(code_departement, 0) * 100
-        texte((x1 + x2)//2, y1 + 80 + i * 30,
+        texte((x1 + x2)//2, y1 + 85 + i * 30,
             f"{m} : {valeur_m:.2f}%",
             couleur="black",
             taille=12,
@@ -225,6 +237,20 @@ def dessiner_contexte(liste_mode, code_departement, donnees_csv):
               remplissage="",
               epaisseur=2,
               tag="contexte")
+    
+    texte((x1 + x2)//2, y2 - 60,
+        f"Inscrits : {dico_inscrits_votants['inscrits'].get(code_departement, 0)}",
+        couleur="black",
+        taille=12,
+        tag="contexte",
+        ancrage="n")
+    
+    texte((x1 + x2)//2, y2 - 30,
+        f"Votants : {dico_inscrits_votants['votants'].get(code_departement, 0)}",
+        couleur="black",
+        taille=12,
+        tag="contexte",
+        ancrage="n")
 
 
 
