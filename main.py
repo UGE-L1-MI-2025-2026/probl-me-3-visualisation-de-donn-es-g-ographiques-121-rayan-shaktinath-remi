@@ -16,8 +16,8 @@ def dessiner_carte(formes_metro, formes_dom, formes_idf, donnees, mode, chefs_li
     params_idf = calculer_params_idf(formes_idf)
     params_dom = calculer_params_dom(formes_dom)
 
-    image(650, 970, "image\\right.png", largeur=150, hauteur=150, tag="image_droite")
-    image(350, 970, "image\\left.png", largeur=150, hauteur=150, tag="image_gauche")
+    image(650, 970, "image/right.png", largeur=150, hauteur=150, tag="image_droite")
+    image(350, 970, "image/left.png", largeur=150, hauteur=150, tag="image_gauche")
     
     dessiner_metropole(formes_metro, donnees, stats, params_metro)
     dessiner_dom(formes_dom, donnees, stats, params_dom)

@@ -82,7 +82,7 @@ def dessiner_ile_de_france(forme_idf, donnees, stats, params_idf):
             
             polygone(tuple(poly_pts), couleur="black", remplissage=couleur, tag=str(code))
 
-def dessiner_centroides(chefs_lieux, params_metro, params_dom, params_idf, rayon_px=6, couleur_hex="#000000"):
+def dessiner_centroides(chefs_lieux, params_metro, params_dom, params_idf):
 
     for code_dep, data in chefs_lieux.items():
         try:
@@ -103,7 +103,7 @@ def dessiner_centroides(chefs_lieux, params_metro, params_dom, params_idf, rayon
         x = (xm - params['centre_geo_x']) * params['echelle'] + params['centre_ecran_x']
         y = -(ym - params['centre_geo_y']) * params['echelle'] + params['centre_ecran_y']
 
-        cercle(x, y, rayon_px, couleur="black", remplissage=couleur_hex, tag=str(code_dep))
+        image(x,y,"image/mairi.png",largeur=20, hauteur=15,tag="prefecture")
 
 def dessiner_legende(donnees, stats, marge=10, largeur_case=100, hauteur_legende=20, espacement=8):
     y1 = marge
